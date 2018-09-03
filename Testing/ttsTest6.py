@@ -4,9 +4,10 @@
 from playsound import playsound
 import os
 
-
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/Users/joe/Documents/SmartArm/robotVoice-b9ba10077aa4.json'
-
+# Mac
+#os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/Users/joe/Documents/SmartArm/robotVoice-b9ba10077aa4.json'
+# Windows
+#os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "C:\Users\yipj1\Documents\SmartArm\robotVoice-b9ba10077aa4.json"
 
 """Synthesizes speech from the input string of text or ssml.
 

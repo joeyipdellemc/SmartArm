@@ -3,10 +3,14 @@
 
 from playsound import playsound
 import os
+import time
+import pyglet
 
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/Users/joe/Documents/SmartArm/robotVoice-b9ba10077aa4.json'
-
+#os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/Users/joe/Documents/SmartArm/robotVoice-b9ba10077aa4.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '\\Users\\yipj1\\Documents\\SmartArm\\robotVoice-b9ba10077aa4.json'
+print("OS Environment")
+print os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 """Synthesizes speech from the input string of text or ssml.
 
@@ -20,23 +24,43 @@ client = texttospeech.TextToSpeechClient()
 voices = client.list_voices()
 
 # Set the text input to be synthesized
-synthesis_input = texttospeech.types.SynthesisInput(text="Hello, World!")
+synthesis_input = texttospeech.types.SynthesisInput(text="You are under arrest")
 
+voiceName = []
 # Build the voice request, select the language code ("en-US") and the ssml
 # voice gender ("neutral")
 for voice in voices.voices:
 	# Display the voice's name. Example: tpc-vocoded
-    print('Name: {}'.format(voice.name))
-    # Select the type of audio file you want returned
-    audio_config = texttospeech.types.AudioConfig(audio_encoding=texttospeech.enums.AudioEncoding.MP3)
-    # Perform the text-to-speech request on the text input with the selected
-    # voice parameters and audio file type
-    response = client.synthesize_speech(synthesis_input, voice, audio_config)
-    # The response's audio_content is binary.
-    with open('output.mp3', 'wb') as out:
-    # Write the response to the output file.
-    	out.write(response.audio_content)
-    	print('Audio content written to file "output.mp3"')
-    #tts.write_to_fp(mp3_fp)
-    	playsound('output.mp3')
+    voiceName.append(voice.name)
+
+	
+for currentVoice in voiceName:
+	print currentVoice
+	if currentVoice.startswith("en"): 
+		# Build the voice request, select the language code ("en-US") and the ssml
+		# voice gender ("neutral"
+		voice = texttospeech.types.VoiceSelectionParams(
+		name=currentVoice,
+		language_code='en-US',
+		ssml_gender=texttospeech.enums.SsmlVoiceGender.MALE)
+		
+		# Select the type of audio file you want returned
+		audio_config = texttospeech.types.AudioConfig(audio_encoding=texttospeech.enums.AudioEncoding.MP3)
+		
+		# Perform the text-to-speech request on the text input with the selected
+		# voice parameters and audio file type
+		response = client.synthesize_speech(synthesis_input, voice, audio_config)
+		
+		# The response's audio_content is binary.
+		with open('output.mp3', 'wb') as out:
+		# Write the response to the output file.
+			out.write(response.audio_content)
+			print('Audio content written to file "output.mp3"')
+		
+		#Play Voice
+		outputVoice = pyglet.media.load('output.mp3', streaming=False)
+		outputVoice.play()
+		#playsound('output.mp3')
+		time.sleep(2)
+		
 
